@@ -1,0 +1,8 @@
+Metadata-Version: 2.1
+Name: bandit-models
+Version: 0.1.0
+Summary: Models for simple bandit tasks.
+Author: Sam Paskewitz
+Author-email: sapa1760@colorado.edu
+Classifier: Development Status :: 1 - Planning
+Classifier: Intended Audience :: Science/Research
