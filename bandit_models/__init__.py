@@ -21,6 +21,14 @@ class model:
     def train(self, bandit, par_val = None):
         '''
         Simulate learning using a bandit task object with given parameter values.
+        
+        Parameters
+        ----------
+        bandit: bandit task object
+            Object specifying which bandit task to use in the simulation.
+        par_val: list or None, optional
+            Optional list of model parameter values to use in the simulation.
+            If not given then default model parameter values will be used.
 
         Notes
         -----
@@ -75,6 +83,19 @@ class model:
         '''
         Obtain log-likelihood of existing data (single participant/task) with given
         parameter values.
+        
+        Parameters
+        ----------
+        data: xarray dataset
+            Behavioral and task data, consisting of:
+                a_psb (n_t, n_a): indicates whether each action is available (1) or not (0) on each trial
+                fb_given (n_t): indicates whether feedback was given (1) or not given (0) after the choice on each trial
+                a (n_t): index of the chosen action on each trial
+                gain (n_t): amount of money/points/etc. gained
+                loss (n_t): amount of money/points/etc. lost
+            For most tasks, a_psb and fb_given will simply have the value 1 on all trials.
+        par_val: list
+            Model parameter values.
         ''' 
         # use default parameters unless others are given
         if par_val is None:
@@ -113,6 +134,27 @@ class model:
     def fit_ml(self, data, global_time = 15, local_time = 15, algorithm = nlopt.GN_DIRECT_L, x0 = None):
         '''
         Obtain maximum likelihood fit to data from a single participant and session.
+        
+        Parameters
+        ----------
+        data: xarray dataset
+            Behavioral and task data, consisting of:
+                a_psb (n_t, n_a): indicates whether each action is available (1) or not (0) on each trial
+                fb_given (n_t): indicates whether feedback was given (1) or not given (0) after the choice on each trial
+                a (n_t): index of the chosen action on each trial
+                gain (n_t): amount of money/points/etc. gained
+                loss (n_t): amount of money/points/etc. lost
+            For most tasks, a_psb and fb_given will simply have the value 1 on all trials.
+        global_time: int, optional
+            Number of seconds to run the global optimization algorithm.
+            Defaults to 15.
+        local_time: int, optional
+            Number of seconds to run the local optimization algorithm.
+            Defaults to 15.
+        algorithm: object, optional
+            Specifies the algorithm used for global optimization.  Defaults to nlopt.GD_STOGO.
+        x0: list or None, optional
+            Optional starting point for search.
         '''
         par_min = self.pars['min']
         par_max = self.pars['max']
@@ -154,7 +196,7 @@ class model:
         ----------
         data_dict: dict
             Keys are individual ID codes and values are xarray datasets that each represent
-            data from the corresponding individual.
+            data from the corresponding individual (see the fit_ml method documentation for details).
         global_time: int, optional
             Number of seconds to run the global optimization algorithm for each individual.
             Defaults to 15.
@@ -219,7 +261,7 @@ class model:
         ----------
         data_dict: dict
             Keys are individual ID codes and values are xarray datasets that each represent
-            data from the corresponding individual.
+            data from the corresponding individual (see the fit_ml method documentation for details).
         global_time: int, optional
             Number of seconds to run the global optimization algorithm for each individual.
             Defaults to 15.
